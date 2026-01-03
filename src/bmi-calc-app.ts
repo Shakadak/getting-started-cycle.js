@@ -14,22 +14,22 @@ function main(sources) {
   const weight$ = changeWeight$.startWith(70)
   const height$ = changeHeight$.startWith(170)
 
-  const stats$ = xs.combine(weight$, height$)
+  const state$ = xs.combine(weight$, height$)
   .map(([weight, height]) => {
     const heightMeters = height * 0.01
     const bmi = Math.round(weight / (heightMeters * heightMeters))
     return {bmi, weight, height}
   })
 
-  const vdom$ = stats$.map(({bmi, weight, height}) =>
+  const vdom$ = state$.map(({bmi, weight, height}) =>
     div([
       div([
         `Weight ${weight} kg`,
-        input('.weight', {attrs: {type: 'range', min: 40, max: 140}})
+        input('.weight', {attrs: {type: 'range', min: 40, max: 140, value: weight}})
       ]),
       div([
         `Height ${height}cm`,
-        input('.height', {attrs: {type: 'range', min: 140, max: 210}})
+        input('.height', {attrs: {type: 'range', min: 140, max: 210, value: height}})
       ]),
       h2(`BMI is ${bmi}`),
     ])
